@@ -1,9 +1,9 @@
 from datetime import datetime
 import geopy
-from geopy.geocoders import Nominatim
+from geopy.geocoders import GoogleV3
 
 
-def start_end():
+def start_end(year):
     today = datetime.now()
     if len(str(today.month)) < 2:
         month = "0" + str(today.month)
@@ -13,11 +13,11 @@ def start_end():
         day = "0" + str(today.day)
     else:
         day = str(today.day)
-    start_date = "1980" + "-" + month + "-" + day
+    start_date = year + "-" + month + "-" + day
     end_date = start_date
     return start_date, end_date
 
 
 start_date, end_date = start_end()
 
-locator = Nominatim(user_agent="myGeocoder")
+locator = GoogleV3(api_key=GOOGLE_MAP_KEY, user_agent="newGeocoder")
