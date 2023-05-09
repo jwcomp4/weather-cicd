@@ -18,6 +18,4 @@ def start_end(year):
     return start_date, end_date
 
 
-start_date, end_date = start_end()
-
 locator = GoogleV3(api_key=GOOGLE_MAP_KEY, user_agent="newGeocoder")
