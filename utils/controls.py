@@ -5,7 +5,8 @@ from dash import dcc, html
 
 controls = [
     ddk.ControlItem(
-        dcc.Input(id="address_value1", placeholder="Type initial address here")
+        dcc.Input(id="address_value1", placeholder="Type initial address here"),
+        label="Initial Address",
     ),
     ddk.ControlItem(
         dcc.Dropdown(
@@ -13,7 +14,7 @@ controls = [
             options=[
                 {"label": "1980", "value": "1980"},
                 {"label": "1960", "value": "1960"},
-                {"label": "1960", "value": "1960"},
+                {"label": "1940", "value": "1940"},
             ],
             value="1980",
         ),
@@ -23,7 +24,6 @@ controls = [
         dcc.RadioItems(
             id="second_address_q",
             options=[{"label": "Yes", "value": "y"}, {"label": "No", "value": "n"}],
-            value="y",
         ),
         label="Do you wish to view a second location's weather?",
     ),
@@ -33,5 +33,6 @@ second_address = ddk.ControlItem(
     dcc.Input(
         id="address_value2",
         placeholder="Type a second address here",
-    )
+    ),
+    label="Second Address",
 )

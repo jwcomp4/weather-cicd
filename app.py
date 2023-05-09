@@ -19,9 +19,34 @@ app.layout = ddk.App(
     [
         ddk.Header(
             [
-                ddk.Logo(src=app.get_relative_path("/assets/wi-wind-deg.svg")),
+                ddk.Logo(src=app.get_asset_url("/assets/logo.svg")),
                 ddk.Title("A Simple Weather Dashboard"),
             ]
-        )
+        ),
+        ddk.Row(
+            ddk.Block(
+                id="control_block",
+                children=ddk.ControlCard(
+                    id="api_params", children=controls, orientation="horizontal"
+                ),
+            )
+        ),
     ]
 )
+
+
+@app.callback(
+    Output("api_params", "children"),
+    Input("second_address_q", "value"),
+    prevent_initial_call=True,
+)
+def add_second_address(value):
+    if value == "y":
+        controls.append(second_address)
+    if value == "n":
+        dash.no_update
+    return controls
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
