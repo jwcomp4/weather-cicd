@@ -31,6 +31,7 @@ app.layout = ddk.App(
                 ),
             )
         ),
+        ddk.Row(id="weather1_row"),
     ]
 )
 
