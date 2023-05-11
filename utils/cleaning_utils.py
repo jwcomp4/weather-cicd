@@ -11,13 +11,6 @@ import pandas as pd
 # Function call will likely happen in a callback function.
 
 
-# def weather_clean(df, splitter):
-#     df1 = df["Hour"].str.split(splitter, expand=True)
-#     df1["Temperature"] = df["Temperature"]
-#     df1.rename(columns={0: "Date", 1: "Hour"}, inplace=True)
-#     return df1
-
-
 def weather_clean(df, splitter, column):
     df1 = df["Hour"].str.split(splitter, expand=True)
     df1[column] = df[column]
