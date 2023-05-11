@@ -24,15 +24,17 @@ controls = [
         dcc.RadioItems(
             id="second_address_q",
             options=[{"label": "Yes", "value": "y"}, {"label": "No", "value": "n"}],
+            value="n",
         ),
         label="Do you wish to view a second location's weather?",
     ),
-]
-
-second_address = ddk.ControlItem(
-    dcc.Input(
-        id="address_value2",
-        placeholder="Type a second address here",
+    ddk.ControlItem(
+        id="second_address",
+        children=dcc.Input(
+            id="address_value2",
+            placeholder="Select Yes to add 2nd Address",
+        ),
+        label="Second Address",
     ),
-    label="Second Address",
-)
+    html.Button("Get Weather", id="weather_button"),
+]

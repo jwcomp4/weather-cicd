@@ -21,8 +21,8 @@ def start_end(year):
 
 
 # Function used to locate "sunrise", "sunset", and "moon_phase"
-def astro(current_weather, param):
-    sky = current_weather["forecast"]["forecastday"][0]["astro"][param]
+def astro(weather, param):
+    sky = weather["forecast"]["forecastday"][0]["astro"][param]
     return sky
 
 
