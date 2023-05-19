@@ -12,9 +12,9 @@ controls = [
         dcc.Dropdown(
             id="historical_year",
             options=[
+                {"label": "1990", "value": "1990"},
                 {"label": "1980", "value": "1980"},
-                {"label": "1960", "value": "1960"},
-                {"label": "1940", "value": "1940"},
+                {"label": "1970", "value": "1970"},
             ],
             value="1980",
         ),
