@@ -17,7 +17,7 @@ app.layout = ddk.App(
         dcc.Geolocation(id="geolocation"),
         ddk.Header(
             [
-                ddk.Logo(src=app.get_asset_url("/assets/logo.svg")),
+                ddk.Logo(src=app.get_asset_url("/logo.svg")),
                 ddk.Title("A Simple Weather Dashboard"),
             ]
         ),
