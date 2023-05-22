@@ -10,7 +10,7 @@ import json
 import plotly
 import plotly.express as px
 
-# Functions and other utilities for making API requests, filtering data, cleaning it, and vizualizing.
+# Functions and other utilities for making API requests, filtering data, cleaning it, and visualizing.
 
 
 # Creating the locator object for geocoding:
@@ -167,17 +167,7 @@ def get_weather(address, year):
 
     clean_hw = weather_clean(hw_df, "T", "Temperature")
 
-    current_data = {
-        "Hour": [
-            x["time"] for x in current_weather["forecast"]["forecastday"][0]["hour"]
-        ],
-        "Temperature": [
-            y["temp_f"] for y in current_weather["forecast"]["forecastday"][0]["hour"]
-        ],
-    }
-    cw_df = pd.DataFrame(current_data)
-
-    clean_cw = weather_clean(cw_df, " ", "Temperature")
+    clean_cw = cw_filter(current_weather, "Temperature", "temp_f")
 
     weather_together = pd.concat([clean_hw, clean_cw])
     weather_together[["Year", "Day"]] = weather_together["Date"].str.split(
