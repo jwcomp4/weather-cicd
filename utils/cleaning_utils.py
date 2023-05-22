@@ -2,6 +2,7 @@ import pandas as pd
 import dash_design_kit as ddk
 import requests
 from datetime import datetime
+import calendar
 import geopy
 from geopy.geocoders import GoogleV3
 from config import GOOGLE_MAP_KEY, key
@@ -67,7 +68,7 @@ def high_low(weather):
 
 
 # Function that creates the ddk.DataCards and ddk.Card to hold weather information:
-def weather_card(date, rise, set, moon, high, low, fig):
+def weather_card(date, rise, set, moon, high, low, fig, fig2):
     sky_block = ddk.Card(
         id=date,
         children=[
@@ -105,10 +106,19 @@ def weather_card(date, rise, set, moon, high, low, fig):
         ],
     )
     rain_fig = ddk.Card(
-        children=[ddk.CardHeader(title="Hourly Chance of Rain"), ddk.Graph(figure=fig)]
+        children=[
+            ddk.CardHeader(id="test", title="Hourly Chance of Rain"),
+            ddk.Graph(figure=fig),
+        ]
+    )
+    weather_comp_fig = ddk.Card(
+        children=[
+            ddk.CardHeader(title="Temperature Comparison"),
+            ddk.Graph(figure=fig2),
+        ]
     )
 
-    return sky_block, rain_fig
+    return sky_block, rain_fig, weather_comp_fig
 
 
 # This function incorporates all of the above functions to geocode the address, make API request, filter data, clean it,
@@ -140,9 +150,53 @@ def get_weather(address, year):
 
     # Establishing the start and end date for the historical weather api request
     start_date, end_date = start_end(year)
+    title_today = calendar.month_name[int(start_date[5:7])]
+
+    # Historical weather
+
+    hist_weather = requests.get(
+        f"https://archive-api.open-meteo.com/v1/archive?latitude={lat}&longitude={lon}&start_date={start_date}&end_date={end_date}&hourly=temperature_2m&daily=temperature_2m_max,temperature_2m_min&timezone=auto&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch"
+    ).json()
+
+    data = {
+        "Hour": [x for x in hist_weather["hourly"]["time"]],
+        "Temperature": [y for y in hist_weather["hourly"]["temperature_2m"]],
+    }
+
+    hw_df = pd.DataFrame(data)
+
+    clean_hw = weather_clean(hw_df, "T", "Temperature")
+
+    current_data = {
+        "Hour": [
+            x["time"] for x in current_weather["forecast"]["forecastday"][0]["hour"]
+        ],
+        "Temperature": [
+            y["temp_f"] for y in current_weather["forecast"]["forecastday"][0]["hour"]
+        ],
+    }
+    cw_df = pd.DataFrame(current_data)
+
+    clean_cw = weather_clean(cw_df, " ", "Temperature")
+
+    weather_together = pd.concat([clean_hw, clean_cw])
+    weather_together[["Year", "Day"]] = weather_together["Date"].str.split(
+        "-", n=1, expand=True
+    )
+    weather_together.drop(columns=["Date"], inplace=True)
+    weather_together.reset_index()
+
+    temp_comp = px.line(
+        weather_together,
+        x="Hour",
+        y="Temperature",
+        color="Year",
+        title=f"Historical and Present Temperature for {title_today} {start_date[8:]}",
+        labels={"Hour": "Hour of the Day", "Temperature": "Temperature (°F)"},
+    )
 
     # Using the weather_card() to create the cards for the dash app:
     weather_today = weather_card(
-        today, sunrise, sunset, moon_phase, high_temp, low_temp, rain_today
+        today, sunrise, sunset, moon_phase, high_temp, low_temp, rain_today, temp_comp
     )
     return weather_today

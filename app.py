@@ -64,6 +64,7 @@ def weather_request(n_clicks, pos, address, year):
     # This callback makes API calls and creates our visualizations.
     # This weather is for the first address and outputs to the first row
     weather_today = get_weather(address, year)
+    # weather_title = html.Div(f"Weather for {address}")
     return weather_today
 
 
