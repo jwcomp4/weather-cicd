@@ -9,11 +9,13 @@ from config import GOOGLE_MAP_KEY, key
 import json
 import plotly
 import plotly.express as px
+import os
 
 # Functions and other utilities for making API requests, filtering data, cleaning it, and visualizing.
 
 
 # Creating the locator object for geocoding:
+GOOGLE_MAP_KEY = os.getenv("GOOGLE_MAP_KEY")
 locator = GoogleV3(api_key=GOOGLE_MAP_KEY, user_agent="newGeocoder")
 
 
@@ -125,6 +127,9 @@ def weather_card(date, rise, set, moon, high, low, fig, fig2):
 # make vizualizations, and create cards for the app layout
 # This function will be called within 2 callbacks.
 def get_weather(address, year):
+    # getting the WeatherAPI key:
+    key = os.getenv("WEATHER_API")
+
     # Geocoding the address
     location = locator.geocode(address)
     # Grabbing the latitude and longitude
