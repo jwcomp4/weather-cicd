@@ -20,7 +20,7 @@ app.layout = ddk.App(
         ddk.Header(
             [
                 ddk.Logo(src=app.get_asset_url("/logo.svg")),
-                ddk.Title("A Simple Weather Dashboard"),
+                ddk.Title("A Simple Weather Dashboard!"),
             ]
         ),
         ddk.Row(
