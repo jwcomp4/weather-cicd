@@ -5,20 +5,20 @@ from datetime import datetime
 import calendar
 import geopy
 from geopy.geocoders import GoogleV3
-
-# from config import GOOGLE_MAP_KEY, key
 import json
 import plotly
 import plotly.express as px
 import os
+from app import cache
 
 # Functions and other utilities for making API requests, filtering data, cleaning it, and visualizing.
-
 
 # Creating the locator object for geocoding:
 GOOGLE_MAP_KEY = os.getenv("GOOGLE_MAP_KEY")
 locator = GoogleV3(api_key=GOOGLE_MAP_KEY, user_agent="newGeocoder")
 
+# API Key for historical weather:
+key = os.getenv("WEATHER_API")
 
 # Function that formats the start/end date for the API request for historical weather
 def start_end(year):
@@ -51,7 +51,6 @@ def weather_clean(df, splitter, column):
     df1.rename(columns={0: "Date", 1: "Hour"}, inplace=True)
     return df1
 
-
 # Function that filters current weather API response, creates a df, and cleans it:
 def cw_filter(weather, col, weather_var):
     data = {
@@ -62,13 +61,11 @@ def cw_filter(weather, col, weather_var):
     clean_df = weather_clean(df, " ", col)
     return clean_df
 
-
 # Function that filters the current weather and finds the high and low temp for the day:
 def high_low(weather):
     high = weather["forecast"]["forecastday"][0]["day"]["maxtemp_f"]
     low = weather["forecast"]["forecastday"][0]["day"]["mintemp_f"]
     return high, low
-
 
 # Function that creates the ddk.DataCards and ddk.Card to hold weather information:
 def weather_card(date, rise, set, moon, high, low, fig, fig2):
@@ -123,23 +120,24 @@ def weather_card(date, rise, set, moon, high, low, fig, fig2):
 
     return sky_block, rain_fig, weather_comp_fig
 
+# This function geocodes the address and caches the lat/lon to minimize API calls.
+@cache.memoize(timeout=0)
+def get_lat_lon(address):
+    location = locator.geocode(address)
+    lat = location.latitude
+    lon = location.longitude 
+    return lat, lon
 
 # This function incorporates all of the above functions to geocode the address, make API request, filter data, clean it,
 # make vizualizations, and create cards for the app layout
 # This function will be called within 2 callbacks.
-def get_weather(address, year):
-    # getting the WeatherAPI key:
-    key = os.getenv("WEATHER_API")
 
-    # Geocoding the address
-    location = locator.geocode(address)
-    # Grabbing the latitude and longitude
-    lat = location.latitude
-    lon = location.longitude
+def get_weather(lat, lon, year):
+
     # Making the api request for the current weather.
     current_weather = requests.get(
-        f"http://api.weatherapi.com/v1/forecast.json?key={key}&q={lat},{lon}&days=7&aqi=no&alerts=no"
-    ).json()
+        f"http://api.weatherapi.com/v1/forecast.json?key={key}&q={lat},{lon}&days=7&aqi=no&alerts=no").json()
+   
     # Getting today's date to be used in the ids of the ddk.DataCards
     today = current_weather["location"]["localtime"][:10]
     # Using the astro func defined in api_utils.py to get the sunrise, sunset, and moon phase
@@ -195,4 +193,5 @@ def get_weather(address, year):
     weather_today = weather_card(
         today, sunrise, sunset, moon_phase, high_temp, low_temp, rain_today, temp_comp
     )
+    
     return weather_today

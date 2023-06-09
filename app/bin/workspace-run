@@ -1,0 +1,8 @@
+#!/bin/bash
+
+/usr/bin/postprep-run
+/usr/bin/restore-packages
+
+/usr/bin/bashrc-run &
+/usr/bin/jupyter-run &
+/usr/bin/theia-run

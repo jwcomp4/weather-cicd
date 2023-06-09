@@ -1,0 +1,18 @@
+#!/bin/bash
+set -x
+
+cd /home/workspaceuser/app
+
+if [ -f requirements_faked ]
+then
+    rm -rf requirements.txt
+    rm -rf requirements_faked
+fi
+
+if [ -f procfile_faked ]
+then
+    rm -rf Procfile
+    rm -rf procfile_faked
+fi
+
+rm -rf tobedeleted.py

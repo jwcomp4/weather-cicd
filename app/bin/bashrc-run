@@ -1,0 +1,16 @@
+#!/bin/bash 
+
+set -x
+
+rm $HOME/.bashrc
+touch $HOME/.bashrc
+cat /opt/workspace/bashrc_addon >> "$HOME/.bashrc"
+
+# initialize conda
+if [ -f $HOME/app/environment.yml ]
+then
+    conda init bash
+    echo "conda activate $HOME/layers/paketo-buildpacks_conda-env-update/conda-env" >> "$HOME/.bashrc"
+fi
+
+source "$HOME/.bashrc"

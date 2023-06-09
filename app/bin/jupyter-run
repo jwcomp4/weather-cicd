@@ -1,0 +1,13 @@
+#!/bin/bash
+set -x
+
+pip install jupyter
+if [ ! -d "$HOME/.jupyter" ] 
+then
+    mkdir $HOME/.jupyter
+    cp /opt/workspace/jupyter_notebook_config.py $HOME/.jupyter
+    mkdir $HOME/.jupyter/custom
+    cp /opt/workspace/jupyter_custom.js $HOME/.jupyter/custom/custom.js
+fi
+
+jupyter-notebook

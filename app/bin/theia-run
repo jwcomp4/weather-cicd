@@ -1,0 +1,12 @@
+#!/bin/bash
+
+mkdir "$HOME"/.theia
+
+if [ -f /home/workspaceuser/app/only_conda_executed ]; then
+    cat /opt/workspace/dot_theia_settings_conda.json > "$HOME"/.theia/settings.json
+    rm -rf only_conda_executed
+else
+    cat /opt/workspace/dot_theia_settings.json > "$HOME"/.theia/settings.json
+fi
+
+yarn theia start /home/workspaceuser/app --hostname 0.0.0.0 --plugins=local-dir:./plugins
