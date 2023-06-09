@@ -62,4 +62,4 @@ jobs:
           echo '-----> Adding git remote'
           git config remote.plotly.url >&- || git remote add plotly git@cs-17.dash.surf:weather-app
           echo '-----> Deploying app'
-          GIT_SSH_COMMAND='ssh -vvv' git push plotly HEAD:master -f
+          GIT_SSH_COMMAND='ssh -vvv' git push plotly HEAD:main -f
