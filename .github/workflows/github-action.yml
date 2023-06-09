@@ -55,8 +55,7 @@ jobs:
           eval "$(ssh-agent -s)" # setting ssh environment variable
           echo '-----> Adding keys to ssh-agent'
           ssh-add ~/.ssh/id_ed25519
-          echo "Host * 
-            Port 3022 
+          echo "Host *
             StrictHostKeyChecking no 
             UserKnownHostsFile=/dev/null" > ~/.ssh/config
           echo '-----> Adding git remote'
